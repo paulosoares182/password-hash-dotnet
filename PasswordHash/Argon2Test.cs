@@ -8,7 +8,7 @@ namespace PasswordHash
     {
         private static string CreateSalt()
         {
-            var buffer = new byte[32];
+            var buffer = new byte[16];
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(buffer);
 
@@ -17,12 +17,12 @@ namespace PasswordHash
 
         private static string HashPassword(string password, string salt)
         {
-            Argon2id argon2 = new(Encoding.UTF8.GetBytes(password))
+            using Argon2id argon2 = new(Encoding.UTF8.GetBytes(password))
             {
                 Salt = Convert.FromBase64String(salt),
                 DegreeOfParallelism = 8,
                 Iterations = 4,
-                MemorySize = 1024 * 1024 // 1 GB
+                MemorySize = 1024 * 64
             };
 
             return Convert.ToBase64String(argon2.GetBytes(32));

@@ -9,3 +9,4 @@ await Pbkdf2Test.Test(password, HashAlgorithmName.SHA512);
 await Pbkdf2AspNetTest.Test(password, HashAlgorithmName.SHA1);
 await Pbkdf2AspNetTest.Test(password, HashAlgorithmName.SHA256);
 await Pbkdf2AspNetTest.Test(password, HashAlgorithmName.SHA512);
+await BCryptTest.Test(password);

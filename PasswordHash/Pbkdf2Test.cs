@@ -8,7 +8,7 @@ namespace PasswordHash
 
         private static string CreateSalt()
         {
-            var salt = new byte[32];
+            var salt = new byte[16];
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(salt);
 
@@ -33,14 +33,16 @@ namespace PasswordHash
         {
             var hashPassword = HashPassword(password, salt, algorithm);
 
-            var hash1 = Encoding.ASCII.GetBytes(hashPassword);
-            var hash2 = Encoding.ASCII.GetBytes(hash);
+            return hashPassword.Equals(hash);
+        }
 
-            var difference = (uint)hash1.Length ^ (uint)hash2.Length;
+        private static bool VerifyHash(byte[] password, byte[] hash)
+        {
+            var difference = (uint)password.Length ^ (uint)hash.Length;
 
-            for (int i = 0; i < hash1.Length && i < hash2.Length; i++)
+            for (int i = 0; i < password.Length && i < hash.Length; i++)
             {
-                difference |= (uint)(hash1[i] ^ hash2[i]);
+                difference |= (uint)(password[i] ^ hash[i]);
             }
 
             return difference == 0;
